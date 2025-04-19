@@ -3,16 +3,15 @@ import Header from './Header'
 import validate from '../utils/validate';
 import { auth} from '../utils/firebase';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword , updateProfile } from 'firebase/auth';
-import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addUser } from '../utils/userSlice';
+import { BACKGROUND ,USER_AVATAR } from '../utils/constants';
 
 
 const Login = () => {
   
     const [toggle, setToggle] = useState(false);
     const [errormessage,SetErrorMessage] = useState(null);
-    const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const handleToggle = () => {
@@ -40,11 +39,10 @@ const Login = () => {
     const user = userCredential.user;
     updateProfile(user, {
       displayName: name.current.value , 
-      photoURL: "https://avatars.githubusercontent.com/u/99197015?v=4",
+      photoURL: USER_AVATAR,
     }).then(() => {
       const {uid ,email, displayName , photoURL } = auth.currentUser;
       dispatch(addUser({uid: uid, email: email, displayName: displayName , photoURL: photoURL}));
-      navigate("/browse");
     }).catch((error) => {
       SetErrorMessage(error.message);
     });
@@ -63,9 +61,6 @@ const Login = () => {
   .then((userCredential) => {
     // Signed in 
     const user = userCredential.user;
-    console.log(user);
-    navigate("/browse");
-    // ...
   })
   .catch((error) => {
     const errorCode = error.code;
@@ -83,7 +78,7 @@ const Login = () => {
       <img 
         className='absolute'
         alt="bg"
-        src="https://assets.nflxext.com/ffe/siteui/vlv3/fa4630b1-ca1e-4788-94a9-eccef9f7af86/web/IN-en-20250407-TRIFECTA-perspective_43f6a235-9f3d-47ef-87e0-46185ab6a7e0_large.jpg"
+        src={BACKGROUND}
         />
     </div>
     <form  onSubmit={(e) => e.preventDefault()} className='absolute p-12 bg-black w-[27rem] h97/12 my-36 mx-auto right-0 left-0 rounded-sm text-white bg-op'>
